@@ -1,7 +1,7 @@
 {
   "name": "app-starter-project-with-webpack",
   "version": "1.0.0",
-  "description": "Proyek ini adalah setup dasar untuk aplikasi web yang menggunakan webpack untuk proses bundling, Babel untuk transpile JavaScript, serta mendukung proses build dan serving aplikasi.",
+  "description": "",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "start-dev": "webpack serve --config webpack.dev.js",
@@ -27,15 +27,5 @@
   },
   "dependencies": {
     "leaflet": "^1.9.4"
-  },
-  "main": "webpack.common.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cornel-s-k/AddStory.git"
-  },
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/cornel-s-k/AddStory/issues"
-  },
-  "homepage": "https://github.com/cornel-s-k/AddStory#readme"
+  }
 }

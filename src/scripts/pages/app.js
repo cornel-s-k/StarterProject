@@ -1,7 +1,5 @@
 import routes from '../routes/routes';
 import { getActiveRoute } from '../routes/url-parser';
-import { initDB } from '../utils/db';
-import { registerServiceWorker, requestNotificationPermission } from '../utils/push';
 
 let currentPage = null;
 
@@ -9,7 +7,6 @@ class App {
   #content;
   #drawerButton;
   #navigationDrawer;
-  #db;
 
   constructor({ navigationDrawer, drawerButton, content }) {
     this.#content = content;
@@ -17,26 +14,6 @@ class App {
     this.#navigationDrawer = navigationDrawer;
 
     this._setupDrawer();
-    this._initPWA();
-  }
-
-  async _initPWA() {
-    // Initialize IndexedDB
-    this.#db = await initDB();
-    
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      try {
-        await registerServiceWorker();
-        
-        // Request notification permission
-        if ('PushManager' in window) {
-          await requestNotificationPermission();
-        }
-      } catch (error) {
-        console.error('Gagal menginisialisasi PWA:', error);
-      }
-    }
   }
 
   _setupDrawer() {
@@ -66,7 +43,7 @@ class App {
     const page = routes[url];
   
     if (!page) {
-      this.#content.innerHTML = '<h1>Halaman tidak ditemukan</h1>';
+      this.#content.innerHTML = '<h1>Page not found</h1>';
       return;
     }
   
@@ -74,7 +51,7 @@ class App {
       currentPage.destroy();
     }
   
-    currentPage = new page({ db: this.#db });
+    currentPage = new page();
   
     if (document.startViewTransition) {
       document.startViewTransition(async () => {
