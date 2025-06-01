@@ -1,4 +1,4 @@
-import HomePresenter from '../scripts/home-presenter';
+import HomePresenter from '../presenters/home-presenter';
 
 const HomePage = {
   render() {
