@@ -23,6 +23,7 @@
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
+<<<<<<< HEAD
     "webpack-merge": "^6.0.1",
     "workbox-webpack-plugin": "^7.3.0"
   },
@@ -34,5 +35,11 @@
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
     "workbox-strategies": "^7.3.0"
+=======
+    "webpack-merge": "^6.0.1"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4"
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
   }
 }

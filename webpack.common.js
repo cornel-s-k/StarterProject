@@ -1,4 +1,6 @@
+
 // webpack.common.js
+
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -11,6 +13,7 @@ module.exports = {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true, // Clean the output directory before build
+
   },
   module: {
     rules: [
@@ -30,6 +33,7 @@ module.exports = {
           from: path.resolve(__dirname, 'src/public/'),
           to: path.resolve(__dirname, 'dist/'),
         },
+<<<<<<< HEAD
         // Remove service-worker.js from here, it will be handled by WorkboxWebpackPlugin
         // {
         //   from: path.resolve(__dirname, 'src/service-worker.js'),
@@ -43,3 +47,9 @@ module.exports = {
     }),
   ],
 };
+=======
+      ],
+    }),
+  ],
+};
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9

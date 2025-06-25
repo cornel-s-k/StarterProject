@@ -1,5 +1,6 @@
 // CSS imports
 import '../styles/styles.css';
+<<<<<<< HEAD
 import '../styles/login.css';
 import App from './pages/app';
 import CONFIG from './config'; // Import CONFIG for VAPID key
@@ -57,6 +58,12 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+=======
+import '../styles/login.css';console.log('App initialized');
+console.log('Rendering page...');
+console.log('Hash changed, re-rendering page...');
+import App from './pages/app';
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
 
 document.addEventListener('DOMContentLoaded', async () => {
   const app = new App({
@@ -69,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
   });
+<<<<<<< HEAD
 
   // Request notification permission and subscribe to push
   if ('Notification' in window && 'serviceWorker' in navigator) {
@@ -85,3 +93,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 });
+=======
+});
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9

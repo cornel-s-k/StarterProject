@@ -1,6 +1,9 @@
 import HomePresenter from '../../presenters/home-presenter.js';
 import createMap from '../../utils/map.js';
+<<<<<<< HEAD
 import IndexedDB from '../../utils/indexeddb.js'; // Import IndexedDB utility
+=======
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
 import L from 'leaflet';
 
 export default class HomePage {
@@ -18,7 +21,10 @@ export default class HomePage {
       <section id="main-content" tabindex="-1">
         <h1>Daftar Cerita</h1>
         <div id="story-list" class="story-grid"></div>
+<<<<<<< HEAD
         <button id="clear-indexeddb" class="btn btn-danger-outline" style="margin-top: 20px;">Bersihkan Data Offline</button>
+=======
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
       </section>
     `;
   }
@@ -32,13 +38,18 @@ export default class HomePage {
         const mainContent = document.getElementById('main-content');
         if (mainContent) {
           mainContent.setAttribute('tabindex', '-1');
+<<<<<<< HEAD
           // mainContent.focus(); // <--- PASTIKAN BARIS INI DIHAPUS ATAU DIKOMENTARI
+=======
+          mainContent.focus(); // Fokus ke main content
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
         }
       });
     }
 
     const token = localStorage.getItem('token');
     const storyList = document.querySelector('#story-list');
+<<<<<<< HEAD
     const clearIndexedDBBtn = document.getElementById('clear-indexeddb');
 
     clearIndexedDBBtn.addEventListener('click', async () => {
@@ -50,6 +61,8 @@ export default class HomePage {
         alert('Gagal membersihkan data offline: ' + error.message);
       }
     });
+=======
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
 
     if (!token) {
       storyList.innerHTML = '<p>Silakan login untuk melihat cerita.</p>';
@@ -57,6 +70,7 @@ export default class HomePage {
     }
 
     try {
+<<<<<<< HEAD
       // Try to get stories from IndexedDB first
       let stories = await IndexedDB.getAllStories();
       if (stories.length > 0) {
@@ -144,3 +158,42 @@ export default class HomePage {
     });
   }
 }
+=======
+      const stories = await HomePresenter.getStories();
+
+      if (!Array.isArray(stories)) {
+        storyList.innerHTML = '<p>Gagal memuat cerita.</p>';
+        return;
+      }
+
+      storyList.innerHTML = '';
+
+      stories.forEach((story, index) => {
+        const article = document.createElement('article');
+        article.classList.add('story-card');
+
+        article.innerHTML = `
+          <img src="${story.photoUrl || '/images/placeholder.jpg'}" alt="${story.name}" />
+          <h2>${story.name}</h2>
+          <p>${story.description}</p>
+          <p>Lokasi: ${
+            story.lat && story.lon ? `${story.lat}, ${story.lon}` : '-'
+          }</p>
+          <div id="map-${index}" class="story-map"></div>
+        `;
+
+        storyList.appendChild(article);
+
+        if (story.lat && story.lon) {
+          const map = createMap(`map-${index}`, [story.lat, story.lon], 13);
+          const marker = L.marker([story.lat, story.lon]).addTo(map);
+          marker.bindPopup(`<strong>${story.name}</strong><br>${story.description}`);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to load stories:', error);
+      storyList.innerHTML = '<p>Gagal memuat cerita. Coba lagi nanti.</p>';
+    }
+  }
+}
+>>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
