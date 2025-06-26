@@ -33,7 +33,6 @@ module.exports = {
           from: path.resolve(__dirname, 'src/public/'),
           to: path.resolve(__dirname, 'dist/'),
         },
-<<<<<<< HEAD
         // Remove service-worker.js from here, it will be handled by WorkboxWebpackPlugin
         // {
         //   from: path.resolve(__dirname, 'src/service-worker.js'),
@@ -47,9 +46,3 @@ module.exports = {
     }),
   ],
 };
-=======
-      ],
-    }),
-  ],
-};
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9

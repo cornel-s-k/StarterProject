@@ -1,10 +1,7 @@
 // scripts/presenters/add-story-presenter.js
 import API from '../data/api.js';
-<<<<<<< HEAD
 import IndexedDB from '../utils/indexeddb.js'; // Import IndexedDB utility
 import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
-=======
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
 
 export default class AddStoryPresenter {
   constructor(view) {
@@ -41,7 +38,6 @@ export default class AddStoryPresenter {
   async submitForm({ title, description, lat, lng, canvas }) {
     canvas.toBlob(async (blob) => {
       try {
-<<<<<<< HEAD
         const storyData = {
           id: uuidv4(), // Generate a unique ID for IndexedDB
           name: title,
@@ -53,8 +49,6 @@ export default class AddStoryPresenter {
         };
 
         // Attempt to send to API
-=======
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
         await API.addStory({
           title,
           description,
@@ -63,7 +57,6 @@ export default class AddStoryPresenter {
           photoBlob: blob
         });
 
-<<<<<<< HEAD
         // If API call is successful, also save to IndexedDB for offline access and consistent display
         await IndexedDB.putStory(storyData);
 
@@ -95,13 +88,6 @@ export default class AddStoryPresenter {
         } else {
           alert('Gagal mengirim cerita: ' + error.message);
         }
-=======
-        alert('Cerita berhasil ditambahkan!');
-        this.stopCamera();
-        location.hash = '/';
-      } catch (error) {
-        alert('Gagal mengirim cerita: ' + error.message);
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
       }
     }, 'image/png');
   }
@@ -111,8 +97,4 @@ export default class AddStoryPresenter {
       this.stream.getTracks().forEach((track) => track.stop());
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
