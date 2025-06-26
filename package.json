@@ -1,0 +1,23 @@
+{
+  "name": "starterproject",
+  "version": "1.0.0",
+  "description": "Proyek ini adalah setup dasar untuk aplikasi web yang menggunakan webpack untuk proses bundling, Babel untuk transpile JavaScript, serta mendukung proses build dan serving aplikasi.",
+  "homepage": "https://github.com/cornel-s-k/StarterProject#readme",
+  "bugs": {
+    "url": "https://github.com/cornel-s-k/StarterProject/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cornel-s-k/StarterProject.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "webpack.common.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
