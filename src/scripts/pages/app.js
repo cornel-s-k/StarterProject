@@ -1,7 +1,9 @@
+// src/scripts/pages/app.js
 import routes from '../routes/routes';
 import { getActiveRoute } from '../routes/url-parser';
+import { isTokenExpired } from '../utils/token'; // <-- Import isTokenExpired
 
-let currentPage = null; // Keep as let, but handle its lifecycle more carefully
+let currentPage = null;
 
 class App {
   #content;
@@ -40,43 +42,57 @@ class App {
 
   async renderPage() {
     const url = getActiveRoute();
-    const PageClass = routes[url]; // Rename 'page' to 'PageClass' for clarity that it's a constructor
+    let targetUrl = url; // <-- Deklarasikan targetUrl di sini
+    let PageClass;      // <-- Deklarasikan PageClass dengan 'let' di sini
 
-    if (!PageClass) { // Check if the class itself is defined
+    // <-- Logika untuk rute yang membutuhkan autentikasi
+    const authRequiredRoutes = ['/add', '/home']; // Tambahkan rute lain yang memerlukan login di sini
+
+    if (authRequiredRoutes.includes(url)) {
+      const token = localStorage.getItem('token');
+      if (!token || isTokenExpired(token)) {
+        alert('Anda harus login untuk mengakses halaman ini.');
+        targetUrl = '/login'; // <-- Sekarang targetUrl sudah dideklarasikan
+        location.hash = '#/login'; // Ini akan memicu renderPage lagi untuk '/login'
+      }
+    }
+    // -- Akhir logika autentikasi --
+
+    // Tetapkan PageClass setelah potensi pengalihan targetUrl
+    PageClass = routes[targetUrl]; // <-- Gunakan PageClass yang sudah dideklarasikan
+
+    if (!PageClass) {
       this.#content.innerHTML = '<h1>Page not found</h1>';
-      console.error(`Route "${url}" not found.`);
+      console.error(`Route "${targetUrl}" not found.`);
       return;
     }
 
     try {
-      // Destroy the previous page instance if it exists and has a destroy method
       if (currentPage && typeof currentPage.destroy === 'function') {
         currentPage.destroy();
-        currentPage = null; // Clear currentPage after destruction
+        currentPage = null;
       }
 
-      // Instantiate the new page
       const newPageInstance = new PageClass();
 
       if (document.startViewTransition) {
         document.startViewTransition(async () => {
           this.#content.innerHTML = await newPageInstance.render();
           await newPageInstance.afterRender();
-          currentPage = newPageInstance; // Assign only after successful rendering
+          currentPage = newPageInstance;
         });
       } else {
-        // For browsers without View Transitions
         this.#content.classList.remove('fade-in');
         this.#content.innerHTML = await newPageInstance.render();
         await newPageInstance.afterRender();
-        void this.#content.offsetWidth; // Trigger reflow *before* adding class
+        void this.#content.offsetWidth;
         this.#content.classList.add('fade-in');
-        currentPage = newPageInstance; // Assign only after successful rendering
+        currentPage = newPageInstance;
       }
     } catch (error) {
       console.error('Error rendering page:', error);
       this.#content.innerHTML = '<h1>Error loading page.</h1><p>' + error.message + '</p>';
-      currentPage = null; // Ensure currentPage is cleared on error
+      currentPage = null;
     }
   }
 }

@@ -1,6 +1,4 @@
-
 // webpack.common.js
-
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -12,14 +10,22 @@ module.exports = {
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true, // Clean the output directory before build
-
+    clean: true,
+    publicPath: '/StarterProject/', 
   },
   module: {
     rules: [
       {
         test: /\.(png|jpe?g|gif)$/i,
         type: 'asset/resource',
+        generator: {
+           filename: (pathData) => {
+            if (pathData.filename.includes('images/icons/')) {
+               return 'images/icons/[name][ext]';
+            }
+              return 'images/[hash][ext]';
+          },
+        },
       },
     ],
   },
@@ -31,15 +37,6 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, 'src/public/'),
-          to: path.resolve(__dirname, 'dist/'),
-        },
-        // Remove service-worker.js from here, it will be handled by WorkboxWebpackPlugin
-        // {
-        //   from: path.resolve(__dirname, 'src/service-worker.js'),
-        //   to: path.resolve(__dirname, 'dist/'),
-        // },
-        {
-          from: path.resolve(__dirname, 'src/manifest.json'),
           to: path.resolve(__dirname, 'dist/'),
         },
       ],

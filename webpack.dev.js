@@ -1,6 +1,8 @@
+// webpack.dev.js
 const path = require('path');
 const common = require('./webpack.common.js');
 const { merge } = require('webpack-merge');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -13,10 +15,37 @@ module.exports = merge(common, {
           'css-loader',
         ],
       },
+      { // <-- Tambahkan aturan ini untuk JS jika belum ada
+        test: /\.js$/,
+        exclude: /node_modules\/(?!workbox-)/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+            },
+          },
+        ],
+      },
     ],
   },
+  plugins: [
+    new WorkboxWebpackPlugin.InjectManifest({
+      swSrc: './src/service-worker.js',
+      swDest: 'sw.js',
+    }),
+  ],
   devServer: {
-    static: path.resolve(__dirname, 'dist'),
+    static: {
+      directory: path.resolve(__dirname, 'dist'),
+      publicPath: '/StarterProject/', // <-- Penting: Set publicPath untuk devServer juga
+    },
+    historyApiFallback: {
+      index: '/StarterProject/index.html',
+      rewrites: [
+        { from: /^\/StarterProject\/.*$/, to: '/StarterProject/index.html' },
+      ],
+    },
     port: 9000,
     client: {
       overlay: {
@@ -25,4 +54,8 @@ module.exports = merge(common, {
       },
     },
   },
+    stats: {
+    warningsFilter: /InjectManifest has been called multiple times/,
+    },
 });
+
