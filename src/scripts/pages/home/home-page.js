@@ -18,7 +18,7 @@ export default class HomePage {
       <section id="main-content" tabindex="-1">
         <h1>Daftar Cerita</h1>
         <div id="story-list" class="story-grid"></div>
-        <button id="clear-indexeddb" class="btn btn-danger-outline" style="margin-top: 20px;">Bersihkan Data Offline</button>
+        <button id="clear-indexeddb" class="btn btn-danger-outline" style="margin-top: 20px;">Bersihkan Semua Data Offline</button>
       </section>
     `;
   }
@@ -57,16 +57,7 @@ export default class HomePage {
     }
 
     try {
-      // Try to get stories from IndexedDB first
-      let stories = await IndexedDB.getAllStories();
-      if (stories.length > 0) {
-        console.log('Stories loaded from IndexedDB:', stories);
-        this.renderStories(storyList, stories);
-      } else {
-        storyList.innerHTML = '<p>Memuat cerita dari jaringan...</p>';
-      }
-
-      // Then fetch from network to get the latest data
+      // Fetch from network first
       const networkStories = await HomePresenter.getStories(() => {
         alert('Sesi Anda telah berakhir. Silakan login kembali.');
         localStorage.removeItem('token');
@@ -74,26 +65,31 @@ export default class HomePage {
       });
 
       if (networkStories && networkStories.length > 0) {
-        // Clear existing stories in IndexedDB and save new ones
-        await IndexedDB.clearStories();
-        for (const story of networkStories) {
-          await IndexedDB.putStory(story);
+        this.renderStories(storyList, networkStories, true); // Pass true to indicate network stories and show "Save" button
+      } else {
+        // If no stories from network, try to load from IndexedDB
+        let stories = await IndexedDB.getAllStories();
+        if (stories.length > 0) {
+          console.log('Stories loaded from IndexedDB (offline):', stories);
+          this.renderStories(storyList, stories);
+        } else {
+          storyList.innerHTML = '<p>Tidak ada cerita yang tersedia.</p>';
         }
-        this.renderStories(storyList, networkStories);
-      } else if (stories.length === 0) {
-        // If no stories from network and no stories in IndexedDB
-        storyList.innerHTML = '<p>Tidak ada cerita yang tersedia.</p>';
       }
     } catch (error) {
-      console.error('Failed to load stories:', error);
-      // If network fails, and no stories in IndexedDB, display an error
-      if ((await IndexedDB.getAllStories()).length === 0) {
+      console.error('Failed to load stories from network:', error);
+      // If network fails, try to load from IndexedDB
+      let stories = await IndexedDB.getAllStories();
+      if (stories.length > 0) {
+        console.log('Stories loaded from IndexedDB (offline fallback):', stories);
+        this.renderStories(storyList, stories);
+      } else {
         storyList.innerHTML = '<p>Gagal memuat cerita. Coba lagi nanti atau cek koneksi internet Anda.</p>';
       }
     }
   }
 
-  renderStories(storyListElement, stories) {
+  renderStories(storyListElement, stories, showSaveButton = false) {
     storyListElement.innerHTML = '';
     if (!stories || stories.length === 0) {
       storyListElement.innerHTML = '<p>Tidak ada cerita yang tersedia.</p>';
@@ -113,6 +109,7 @@ export default class HomePage {
           story.lat && story.lon ? `${story.lat}, ${story.lon}` : '-'
         }</p>
         <div id="map-${index}" class="story-map"></div>
+        ${showSaveButton ? `<button class="btn save-story-btn" data-id="${story.id}">Simpan ke Offline</button>` : ''}
         <button class="btn btn-danger-outline delete-story-btn" data-id="${story.id}">Hapus Cerita Ini</button>
       `;
 
@@ -125,6 +122,22 @@ export default class HomePage {
       }
     });
 
+    // Add event listeners for save buttons
+    document.querySelectorAll('.save-story-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const storyId = e.target.dataset.id;
+            const storyToSave = stories.find(story => story.id === storyId);
+            if (storyToSave) {
+                try {
+                    await IndexedDB.putStory(storyToSave);
+                    alert('Cerita berhasil disimpan ke penyimpanan offline!');
+                } catch (error) {
+                    alert('Gagal menyimpan cerita ke penyimpanan offline: ' + error.message);
+                }
+            }
+        });
+    });
+
     // Add event listeners for delete buttons
     document.querySelectorAll('.delete-story-btn').forEach(button => {
       button.addEventListener('click', async (e) => {
@@ -133,7 +146,7 @@ export default class HomePage {
           try {
             await IndexedDB.deleteStory(storyId);
             alert('Cerita berhasil dihapus dari penyimpanan offline!');
-            // Re-render stories after deletion
+            // Re-render stories after deletion by fetching from IndexedDB
             const updatedStories = await IndexedDB.getAllStories();
             this.renderStories(storyListElement, updatedStories);
           } catch (error) {

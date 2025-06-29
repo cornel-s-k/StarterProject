@@ -12,7 +12,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({
+  new CacheFirst({ // Changed from NetworkFirst to CacheFirst
     cacheName: 'pages-cache',
     plugins: [
       new CacheableResponsePlugin({
