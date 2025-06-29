@@ -6,6 +6,9 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
+  output: {
+    publicPath: '/StarterProject/', 
+  },
   module: {
     rules: [
       {
@@ -15,7 +18,7 @@ module.exports = merge(common, {
           'css-loader',
         ],
       },
-      { // <-- Tambahkan aturan ini untuk JS jika belum ada
+      {
         test: /\.js$/,
         exclude: /node_modules\/(?!workbox-)/,
         use: [
@@ -38,7 +41,7 @@ module.exports = merge(common, {
   devServer: {
     static: {
       directory: path.resolve(__dirname, 'dist'),
-      publicPath: '/StarterProject/', // <-- Penting: Set publicPath untuk devServer juga
+      publicPath: '/StarterProject/',
     },
     historyApiFallback: {
       index: '/StarterProject/index.html',
@@ -58,4 +61,3 @@ module.exports = merge(common, {
     warningsFilter: /InjectManifest has been called multiple times/,
     },
 });
-

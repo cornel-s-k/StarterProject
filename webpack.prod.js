@@ -7,6 +7,9 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
+  output: {
+    publicPath: '/StarterProject/', 
+  },
   module: {
     rules: [
       {
@@ -34,8 +37,8 @@ module.exports = merge(common, {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
     new WorkboxWebpackPlugin.InjectManifest({
-      swSrc: './src/service-worker.js', // <-- Pastikan ini menunjuk ke file Workbox utama Anda
-      swDest: 'sw.js', // <-- Nama file output di folder dist
+      swSrc: './src/service-worker.js',
+      swDest: 'sw.js',
     }),
   ],
 });

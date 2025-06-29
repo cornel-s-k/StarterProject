@@ -46,6 +46,14 @@
       "src": "/StarterProject/images/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+     {
+      "src": "/StarterProject/images/screenshots/narrow-screenshot1.png", // <--- Gunakan jalur absolut ini
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Tampilan aplikasi di perangkat mobile."
     }
   ]
 }
+ 
