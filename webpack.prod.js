@@ -1,15 +1,10 @@
-// webpack.prod.js
 const common = require('./webpack.common.js');
 const { merge } = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
 module.exports = merge(common, {
   mode: 'production',
-  output: {
-    publicPath: '/StarterProject/', 
-  },
   module: {
     rules: [
       {
@@ -21,7 +16,7 @@ module.exports = merge(common, {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules\/(?!workbox-)/,
+        exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
@@ -36,9 +31,5 @@ module.exports = merge(common, {
   plugins: [
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
-    new WorkboxWebpackPlugin.InjectManifest({
-      swSrc: './src/service-worker.js',
-      swDest: 'sw.js',
-    }),
   ],
 });

@@ -1,77 +1,153 @@
-// src/scripts/data/api.js
-import { isTokenExpired } from '../utils/token';
+import { BASE_URL } from '../config';
+import { getAccessToken } from '../utils/auth';
 
-const BASE_URL = 'https://story-api.dicoding.dev/v1';
+const ENDPOINTS = {
+  ENDPOINT: `${BASE_URL}/your/endpoint/here`,
 
-const API = {
-  async getStories() {
-    const token = localStorage.getItem('token');
-    if (!token || isTokenExpired(token)) {
-      throw new Error('UNAUTHORIZED');
-    }
+  REPORT_LIST: `${BASE_URL}/stories`,
+  ADD_REPORT: `${BASE_URL}/stories`,
+  LOGIN: `${BASE_URL}/login`,
+  REGISTER: `${BASE_URL}/register`,
+  DETAIL_STORY: (id) => `${BASE_URL}/stories/${id}`,
 
-    try {
-      const response = await fetch(`${BASE_URL}/stories?location=1`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (data.error) throw new Error(data.message);
-      return data.listStory;
-    } catch (error) {
-      console.error('Gagal fetch stories:', error);
-      throw error;
-    }
-  },
-
-  async login(email, password) {
-    try {
-      const response = await fetch(`${BASE_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      if (data.error) throw new Error(data.message);
-      return data.loginResult.token;
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
-    }
-  },
-
-  async addStory({ title, description, lat, lng, photoBlob }) {
-    const token = localStorage.getItem('token');
-    if (!token || isTokenExpired(token)) {
-      throw new Error('UNAUTHORIZED');
-    }
-
-    const formData = new FormData();
-    formData.append('description', description);
-    if (lat && lng) {
-      formData.append('lat', lat);
-      formData.append('lon', lng);
-    }
-    formData.append('photo', photoBlob, 'story.png');
-
-    try {
-      const response = await fetch(`${BASE_URL}/stories`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (data.error) throw new Error(data.message);
-      return data;
-    } catch (error) {
-      console.error('Gagal menambahkan cerita:', error);
-      throw error;
-    }
-  }
+  SUBSCRIBE: `${BASE_URL}/notifications/subscribe`,
+  UNSUBSCRIBE: `${BASE_URL}/notifications/subscribe`,
 };
 
-export default API;
+export async function getData() {
+  const fetchResponse = await fetch(ENDPOINTS.ENDPOINT);
+  return await fetchResponse.json();
+}
+
+
+export async function getAllReports() {
+  const accessToken = getAccessToken();
+
+  const fetchResponse = await fetch(ENDPOINTS.REPORT_LIST, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+
+
+export async function getStoryById(id) {
+  const accessToken = getAccessToken();
+
+  const fetchResponse = await fetch(ENDPOINTS.DETAIL_STORY(id), {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+
+
+export async function TambahData({
+  description,
+  photo,
+  lat,
+  lon,
+}) {
+  const accessToken = getAccessToken();
+  const formData = new FormData();
+  formData.set('description', description);
+  formData.set('lat', lat);
+  formData.set('lon', lon);
+  formData.append('photo', photo);
+  
+
+  const fetchResponse = await fetch(ENDPOINTS.ADD_REPORT, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: formData,
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+
+export async function getLogin({ email, password }) {
+  const data = JSON.stringify({ email, password });
+
+  const fetchResponse = await fetch(ENDPOINTS.LOGIN, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: data,
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+
+export async function getRegistered({ name, email, password }) {
+  const data = JSON.stringify({ name, email, password });
+
+  const fetchResponse = await fetch(ENDPOINTS.REGISTER, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: data,
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+
+export async function subscribePushNotification({ endpoint, keys: { p256dh, auth } }) {
+  const accessToken = getAccessToken();
+  const data = JSON.stringify({
+    endpoint,
+    keys: { p256dh, auth },
+  });
+ 
+  const fetchResponse = await fetch(ENDPOINTS.SUBSCRIBE, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: data,
+  });
+  const json = await fetchResponse.json();
+ 
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}
+ 
+export async function unsubscribePushNotification({ endpoint }) {
+  const accessToken = getAccessToken();
+  const data = JSON.stringify({ endpoint });
+ 
+  const fetchResponse = await fetch(ENDPOINTS.UNSUBSCRIBE, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: data,
+  });
+  const json = await fetchResponse.json();
+ 
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
+}

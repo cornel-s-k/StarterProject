@@ -8,11 +8,28 @@ const { StaleWhileRevalidate, CacheFirst, NetworkOnly } = workbox.strategies;
 const { CacheableResponsePlugin } = workbox.cacheableResponse;
 const { ExpirationPlugin } = workbox.expiration;
 
-precacheAndRoute(self.__WB_MANIFEST);
+const CACHE_NAME = "starter-project-with-webpack-v1";
+const BASE_PATH = "/starter-project-with-webpack";
+
+const urlsToCache = [
+  `${BASE_PATH}/`,
+  `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/app.bundle.js`,
+  `${BASE_PATH}/app.css`,
+  `${BASE_PATH}/images/hero.png`,
+  `${BASE_PATH}/favicon.png`,
+  `${BASE_PATH}/images/logo.png`,
+  `${BASE_PATH}/manifest.json`,
+  `${BASE_PATH}/sw.bundle.js`,
+];
+
+precacheAndRoute(self.__WB_MANIFEST || []);
+precacheAndRoute(urlsToCache);
+
 
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new CacheFirst({ // Changed from NetworkFirst to CacheFirst
+  new CacheFirst({
     cacheName: 'pages-cache',
     plugins: [
       new CacheableResponsePlugin({
@@ -33,7 +50,8 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 Days
+        maxAgeSeconds: 7 * 24 * 60 * 60,
+        maxEntries: 50,
       }),
     ],
   })
@@ -48,7 +66,7 @@ registerRoute(
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxAgeSeconds: 1 * 24 * 60 * 60, // 1 Day
+        maxAgeSeconds: 1 * 24 * 60 * 60,
         maxEntries: 50,
       }),
     ],
@@ -58,7 +76,6 @@ registerRoute(
 registerRoute(
   ({ url, request }) => url.pathname.startsWith('https://story-api.dicoding.dev/v1/stories') && request.method === 'POST',
   new NetworkOnly({
-    // POST requests are generally not cacheable. This ensures they always go to the network.
   })
 );
 
@@ -70,10 +87,10 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activated');
+  event.waitUntil(clients.claim());
 });
 
 self.addEventListener('fetch', (event) => {
-  // Workbox handles most of the fetching. Custom logic can be added here if needed.
 });
 
 self.addEventListener('push', (event) => {
@@ -82,8 +99,8 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Push Notification';
   const options = {
     body: data.message || 'You have a new notification!',
-    icon: '/StarterProject/images/icons/icon-192x192.png', // Jalur ikon yang diperbaiki
-    badge: '/StarterProject/images/icons/icon-72x72.png',  // Jalur ikon yang diperbaiki
+    icon: `${BASE_PATH}/images/icons/logo.png`,
+    badge: `${BASE_PATH}/images/icons/logo.png`,
   };
 
   event.waitUntil(self.registration.showNotification(title, options));

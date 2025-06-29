@@ -1,16 +1,18 @@
-// src/scripts/pages/app.js
-import routes from '../routes/routes';
-import { getActiveRoute } from '../routes/url-parser';
-import { isTokenExpired } from '../utils/token'; // <-- Import isTokenExpired
-
-let currentPage = null;
+import routes from "../routes/routes";
+import { getActiveRoute } from "../routes/url-parser";
+import "../../styles/styles.css";
+import { isServiceWorkerAvailable } from "../utils/index";
+import { subscribe, unsubscribe } from '../utils/notification-helper';
+import LoginPage from "./auth/login/login-page";
 
 class App {
-  #content;
-  #drawerButton;
-  #navigationDrawer;
+  #content = null;
+  #drawerButton = null;
+  #navigationDrawer = null;
 
-  constructor({ navigationDrawer, drawerButton, content }) {
+  constructor({ navigationDrawer, drawerButton, content, routes }) {
+    // this.routes = {
+    //   '/login': new LoginPage(),}
     this.#content = content;
     this.#drawerButton = drawerButton;
     this.#navigationDrawer = navigationDrawer;
@@ -19,80 +21,94 @@ class App {
   }
 
   _setupDrawer() {
-    this.#drawerButton.addEventListener('click', () => {
-      this.#navigationDrawer.classList.toggle('open');
+    this.#drawerButton.addEventListener("click", () => {
+      this.#navigationDrawer.classList.toggle("open");
     });
 
-    document.body.addEventListener('click', (event) => {
+    document.body.addEventListener("click", (event) => {
       if (
         !this.#navigationDrawer.contains(event.target) &&
         !this.#drawerButton.contains(event.target)
       ) {
-        this.#navigationDrawer.classList.remove('open');
+        this.#navigationDrawer.classList.remove("open");
       }
-    });
 
-    this.#navigationDrawer.addEventListener('click', (event) => {
-      const link = event.target.closest('a');
-      if (link) {
-        this.#navigationDrawer.classList.remove('open');
-      }
+      this.#navigationDrawer.querySelectorAll("a").forEach((link) => {
+        if (link.contains(event.target)) {
+          this.#navigationDrawer.classList.remove("open");
+        }
+      });
     });
   }
 
+ 
+async #setupPushNotification() {
+  const pushNotificationTools = document.getElementById("push-notification-tools");
+  if (!pushNotificationTools) return;
+
+  const registration = await navigator.serviceWorker.getRegistration();
+  if (!registration) return;
+
+  const getCurrentSubscription = async () => {
+    return await registration.pushManager.getSubscription();
+  };
+
+  const renderButton = async () => {
+    const subscription = await getCurrentSubscription();
+    pushNotificationTools.innerHTML = `
+      <button id="subscribe-button" class="btn">
+        ${subscription ? 'Unsubscribe' : 'Subscribe'}
+      </button>
+    `;
+
+    const subscribeButton = document.getElementById("subscribe-button");
+    if (!subscribeButton) return;
+
+    subscribeButton.addEventListener("click", async () => {
+      const currentSub = await getCurrentSubscription();
+
+      if (currentSub) {
+        await unsubscribe(); // panggil fungsi helper, bukan unsubscribe manual
+      } else {
+        await subscribe();
+      }
+
+      // Render ulang tombol berdasarkan status terbaru
+      await renderButton();
+    });
+  };
+
+  // Panggil render pertama kali
+  await renderButton();
+}
+
+
+
+
   async renderPage() {
     const url = getActiveRoute();
-    let targetUrl = url; // <-- Deklarasikan targetUrl di sini
-    let PageClass;      // <-- Deklarasikan PageClass dengan 'let' di sini
+    const page = routes[url];
 
-    // <-- Logika untuk rute yang membutuhkan autentikasi
-    const authRequiredRoutes = ['/add', '/home']; // Tambahkan rute lain yang memerlukan login di sini
+    const loadContent = async () => {
+      this.#content.innerHTML = await page.render();
 
-    if (authRequiredRoutes.includes(url)) {
-      const token = localStorage.getItem('token');
-      if (!token || isTokenExpired(token)) {
-        alert('Anda harus login untuk mengakses halaman ini.');
-        targetUrl = '/login'; // <-- Sekarang targetUrl sudah dideklarasikan
-        location.hash = '#/login'; // Ini akan memicu renderPage lagi untuk '/login'
+      void this.#content.offsetWidth;
+
+      this.#content.innerHTML = await page.render();
+
+      if (typeof page.afterRender === "function") {
+        await page.afterRender();
+
+        if (isServiceWorkerAvailable()) {
+          this.#setupPushNotification();
+        }
       }
-    }
-    // -- Akhir logika autentikasi --
+    };
 
-    // Tetapkan PageClass setelah potensi pengalihan targetUrl
-    PageClass = routes[targetUrl]; // <-- Gunakan PageClass yang sudah dideklarasikan
-
-    if (!PageClass) {
-      this.#content.innerHTML = '<h1>Page not found</h1>';
-      console.error(`Route "${targetUrl}" not found.`);
-      return;
-    }
-
-    try {
-      if (currentPage && typeof currentPage.destroy === 'function') {
-        currentPage.destroy();
-        currentPage = null;
-      }
-
-      const newPageInstance = new PageClass();
-
-      if (document.startViewTransition) {
-        document.startViewTransition(async () => {
-          this.#content.innerHTML = await newPageInstance.render();
-          await newPageInstance.afterRender();
-          currentPage = newPageInstance;
-        });
-      } else {
-        this.#content.classList.remove('fade-in');
-        this.#content.innerHTML = await newPageInstance.render();
-        await newPageInstance.afterRender();
-        void this.#content.offsetWidth;
-        this.#content.classList.add('fade-in');
-        currentPage = newPageInstance;
-      }
-    } catch (error) {
-      console.error('Error rendering page:', error);
-      this.#content.innerHTML = '<h1>Error loading page.</h1><p>' + error.message + '</p>';
-      currentPage = null;
+    if (document.startViewTransition) {
+      document.startViewTransition(loadContent);
+    } else {
+      await loadContent();
     }
   }
 }
