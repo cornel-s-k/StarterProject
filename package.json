@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
-    "start-dev": "webpack serve --config webpack.dev.js",
+    "build:local": "cross-env PUBLIC_URL=/ webpack --config webpack.prod.js",
+    "build:deploy": "cross-env PUBLIC_URL=/StarterProject/ webpack --config webpack.prod.js",
+    "start-dev": "cross-env PUBLIC_URL=/StarterProject/ webpack serve --config webpack.dev.js",
     "serve": "http-server dist"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "babel-loader": "^10.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.3",
     "http-server": "^14.1.1",
