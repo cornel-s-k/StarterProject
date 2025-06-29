@@ -1,4 +1,4 @@
-import NewPresenter from "./addstory-presenter";
+import NewPresenter from "./story-detail-presenter";
 import { convertBase64ToBlob } from "../../utils/index";
 import * as CityCareAPI from "../../data/api";
 import Camera from "../../utils/cam";

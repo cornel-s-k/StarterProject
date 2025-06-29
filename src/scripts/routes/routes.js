@@ -14,10 +14,10 @@
 // export default routes;
 
 import HomePage from '../pages/home/home-page';
-import NewPage from '../pages/new/new-page';
+import NewPage from '../pages/story-detail/story-detail-page';
 import LoginPage from '../pages/auth/login/login-page';
 import RegisterPage from '../pages/auth/register/register-page';
-import DetailPage from '../pages/repot-detail/detail-page';
+import DetailPage from '../pages/report/detail-page';
 import { checkAuthenticatedRoute, checkUnauthenticatedRouteOnly } from '../utils/auth';
 import BookmarkPage from '../pages/bookmark/bookmark-page';
 

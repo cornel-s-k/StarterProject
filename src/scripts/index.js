@@ -1,71 +1,61 @@
-const CACHE_NAME = "starter-project-with-webpack-v1";
-const BASE_PATH = "/starter-project-with-webpack";
+// CSS imports
+import '../styles/styles.css';
+import { getLogout } from './utils/auth';
+import Camera from './utils/cam';
+import App from './pages/app';
+import { registerServiceWorker } from './utils/index';
 
-const urlsToCache = [
-  `${BASE_PATH}/`,
-  `${BASE_PATH}/index.html`,
-  `${BASE_PATH}/app.bundle.js`,
-  `${BASE_PATH}/app.css`,
-  `${BASE_PATH}/images/hero.png`,
-  `${BASE_PATH}/favicon.png`,
-  `${BASE_PATH}/images/logo.png`,
-  `${BASE_PATH}/manifest.json`,
-  `${BASE_PATH}/sw.bundle.js`,
-];
+document.addEventListener('DOMContentLoaded', async () => {
+  toggleNavbarVisibility();
+  const app = new App({
+    content: document.querySelector('#main-content'),
+    drawerButton: document.querySelector('#drawer-button'),
+    navigationDrawer: document.querySelector('#navigation-drawer'),
+  });
+  await app.renderPage();
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      for (const url of urlsToCache) {
-        try {
-          await cache.add(url);
-          console.log(`Cached successfully: ${url}`);
-        } catch (err) {
-          console.error(`Failed to cache: ${url}`, err);
-        }
+  await registerServiceWorker();
+
+  window.addEventListener('hashchange', async () => {
+    await app.renderPage();
+  });
+
+  window.addEventListener('hashchange', async () => {
+    toggleNavbarVisibility();
+    if (location.hash === '#/logout') {
+      const confirmLogout = confirm('Apakah kamu yakin ingin keluar?');
+
+      if (confirmLogout) {
+        getLogout();
+        window.location.hash = '/login';
+      } else {
+        window.history.back();
       }
-    })()
-  );
-  self.skipWaiting();
+    }
+   
+    // Stop all active media
+    Camera.stopAllStreams();
+  });
+
+  const mainContent = document.querySelector('#main-content');
+  const skipLink = document.querySelector('.skip-to-content');
+
+  skipLink.addEventListener('click', function (event) {
+    event.preventDefault(); // Mencegah refresh halaman
+    skipLink.blur(); // Menghilangkan fokus skip to content
+    mainContent.focus(); // Fokus ke konten utama
+    mainContent.scrollIntoView(); // Halaman scroll ke konten utama
+  });
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) =>
-        Promise.all(
-          cacheNames
-            .filter((name) => name !== CACHE_NAME)
-            .map((name) => caches.delete(name))
-        )
-      )
-  );
-  self.clients.claim();
-});
+function toggleNavbarVisibility() {
+  const navbar = document.querySelector('.main-header');
+  if (!navbar) return;
 
-self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(event.request).catch(() => caches.match(`${BASE_PATH}/index.html`))
-      );
-    })
-  );
-});
-
-self.addEventListener("push", (event) => {
-  console.log("Service worker pushing...");
-
-  async function chainPromise() {
-    await self.registration.showNotification("Perhatian", {
-      body: "Cerita baru telah ditambahkan",
-    });
+  // Mengecek jika hash berada di halaman login atau register
+  if (location.hash === '#/login' || location.hash === '#/register') {
+    navbar.style.display = 'none'; // Menyembunyikan navbar
+  } else {
+    navbar.style.display = 'flex'; // Menampilkan navbar (menggunakan flex untuk layout)
   }
-
-  event.waitUntil(chainPromise());
-});
+}

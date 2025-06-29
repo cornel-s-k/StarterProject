@@ -1,6 +1,6 @@
 {
   "name": "Aplikasi Cerita",
-  "short_name": "Cerita",
+  "short_name": "Story",
   "start_url": "/StarterProject",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -17,7 +17,7 @@
       "name": "Tambah Cerita",
       "short_name": "Tambah Cerita",
       "description": "Menuju ke halaman Tambah Cerita",
-      "url": "/starter-project-with-webpack/#/add-story",
+      "url": "/StarterProject/#/add-story",
       "icons": [
         {
           "src": "images/icons/logo.png",
@@ -29,28 +29,28 @@
   ],
   "screenshots": [
     {
-      "src": "images/screenshots/ss1.png",
+      "src": "images/screenshots/tp1.png",
       "type": "image/png",
       "sizes": "1280x720",
       "label": "Tampilan Desktop",
       "form_factor": "wide"
     },
     {
-      "src": "images/screenshots/ss2.png",
+      "src": "images/screenshots/tp2.png",
       "type": "image/png",
       "sizes": "1280x720",
       "label": "Tampilan Desktop",
       "form_factor": "wide"
     },
     {
-      "src": "images/screenshots/ss3.png",
+      "src": "images/screenshots/tp3.png",
       "type": "image/png",
       "sizes": "1280x720",
       "label": "Tampilan Desktop",
       "form_factor": "wide"
     },
     {
-      "src": "images/screenshots/ssm.png",
+      "src": "images/screenshots/tp4.png",
       "type": "image/png",
       "sizes": "360x640",
       "label": "Tampilan Mobile",

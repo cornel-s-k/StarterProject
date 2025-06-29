@@ -5,6 +5,21 @@
   box-sizing: border-box;
 }
 
+/* New Color Variables for easy theme changes */
+:root {
+  --soft-pink: #FFB3C1;
+  --light-pink: #FFD1DC;
+  --medium-purple: #A78BFA;
+  --light-purple: #C7B5FC;
+  --soft-blue: #AEC6FF;
+  --light-blue: #C6E2FF;
+  --text-dark: #333;
+  --text-light: #fff;
+  --bg-light: #FBF7F6; /* A slightly warmer light background */
+  --shadow-light: rgba(0, 0, 0, 0.08);
+  --shadow-medium: rgba(0, 0, 0, 0.12);
+}
+
 @keyframes full-slide-from-right {
   from {
     transform: translateX(100%);
@@ -16,9 +31,6 @@
     transform: translateX(-100%);
   }
 }
-
-
-
 
 ::view-transition-old(root) {
   animation-name: full-slide-to-left;
@@ -34,8 +46,8 @@
 
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #fff;
-  color: #333;
+  background-color: var(--bg-light); /* Using the new background variable */
+  color: var(--text-dark);
 }
 
 .container {
@@ -44,9 +56,9 @@ body {
   margin-inline: auto;
 }
 
-/* Header & Navigation */
+/* --- Header & Navigation --- */
 header {
-  background-color: rgba(0, 100, 0, 0.8);
+  background-color: rgba(167, 139, 250, 0.8); /* Medium Purple with transparency */
   position: sticky;
   top: 0;
   z-index: 10000;
@@ -67,7 +79,7 @@ header {
   font-size: 1.125rem;
   font-weight: bold;
   text-decoration: none;
-  color: #fff;
+  color: var(--text-light);
 }
 
 .drawer-button {
@@ -77,7 +89,7 @@ header {
   background-color: transparent;
   font-weight: bold;
   font-size: 28px;
-  color: #141e16;
+  color: var(--text-light); /* Changed to fit the new palette */
   cursor: pointer;
 }
 
@@ -85,11 +97,11 @@ header {
   min-height: 100vh;
   width: 200px;
   padding: 20px 10px;
-  background-color: #fff;
+  background-color: var(--text-light);
   position: fixed;
   inset-block-start: 0;
   inset-inline-start: 0;
-  box-shadow: 0 0 4px 2px #00000033;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1); /* Softer shadow */
   transform: translateX(-100%);
   transition: transform 350ms;
   z-index: 9999;
@@ -110,8 +122,8 @@ header {
 .nav-list li a {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #2ecc71;
-  color: #fff;
+  background-color: var(--soft-pink); /* Soft Pink */
+  color: var(--text-light);
   text-decoration: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -122,23 +134,23 @@ header {
 }
 
 .nav-list li a:hover {
-  background-color: #27ae60;
+  background-color: var(--medium-purple); /* Medium Purple on hover */
   transform: scale(1.05);
 }
 
-/* Hero Section */
+/* --- Hero Section --- */
 .hero-home {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('../public/images/green.jpg');
+  background-image: url('../public/images/back.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-light);
   overflow: hidden;
 }
 
@@ -176,128 +188,197 @@ header {
 .hero-content button {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  background-color: #00b894;
+  background-color: var(--soft-blue); /* Soft Blue */
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  color: white;
+  color: var(--text-light);
   transition: background 0.3s;
 }
 
 .hero-content button:hover {
-  background-color: #019875;
+  background-color: var(--light-blue); /* Lighter Blue on hover */
 }
 
-/* Logout link styling - Red Lux */
+/* Logout link styling - Soft Pink/Purple */
 a.logout-button {
   display: inline-block;
-  color: #fff;
-  background: linear-gradient(135deg, #b31217, #e52d27); /* dark red to bright red */
+  color: var(--text-light);
+  background: linear-gradient(135deg, var(--medium-purple), var(--soft-pink)); /* Purple to Pink gradient */
   padding: 0.5rem 1.2rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
-  box-shadow: 0 4px 12px rgba(229, 45, 39, 0.4);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4); /* Shadow matching purple */
   transition: all 0.3s ease;
 }
 
 a.logout-button:hover {
-  background: linear-gradient(135deg, #e52d27, #b31217); /* reversed gradient */
+  background: linear-gradient(135deg, var(--soft-pink), var(--medium-purple)); /* Reversed gradient */
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(179, 18, 23, 0.6);
+  box-shadow: 0 6px 16px rgba(255, 179, 193, 0.6); /* Shadow matching pink */
 }
 
-
-
-
-/* Report List & Cards */
-.report-list {
+/* --- Story/Feed List Specific Styles (Replaced original Report List & Cards) --- */
+/* Target the section with ID feeds-section and class story-list */
+#feeds-section.story-list,
+#bookmarked-stories-section.story-list { /* Apply to bookmark section too */
   padding: 4rem 2rem;
-  background-color: #f9f9f9;
+  background-color: var(--bg-light);
   text-align: center;
 }
 
-.report-list h2 {
+/* Target the h2 inside these sections */
+#feeds-section.story-list h2,
+#bookmarked-stories-section.story-list h2 { /* Apply to bookmark section too */
   font-size: 2rem;
   margin-bottom: 2rem;
 }
 
-/* Cards Container */
+/* Cards Container - this class name is already correct in CSS and JS */
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
   margin-top: 1rem;
-  padding: 0 1.5rem;  /* Memberi ruang kiri-kanan agar tidak mepet ke pinggir */
+  padding: 0 1.5rem;
 }
 
-/* Card Laporan */
-.report-card {
+/* Card for stories/posts (replaced .report-card and .report-item) */
+.story-card {
   position: relative;
-  background: white;
-  padding: 1.5rem;
+  background: var(--text-light);
+  padding: 1.5rem; /* Padding for the card content area */
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px var(--shadow-light);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: left;
   display: flex;
-  flex-direction: column; /* Menata elemen-elemen di dalam card secara vertikal */
-  min-height: 300px;
-  margin: 0 auto;  /* Agar card terpusat di tengah */
+  flex-direction: column; /* Stack content vertically */
+  min-height: 380px; /* Consistent minimum height for uniformity */
+  margin: 0 auto;
 }
 
-.report-card:hover {
+.story-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 16px var(--shadow-medium);
 }
 
-.report-photo {
+/* Image inside the story card (replaces .report-photo and .report-item__image) */
+.story-photo,
+.story-item__image,
+.story-card__image {
   width: 100%;
-  height: 180px;
+  height: 180px; /* Consistent image height */
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 1rem;
+  background-color: #f0f0f0; /* Fallback for images */
 }
 
-.report-info {
-  margin-bottom: 2rem;
+/* Body of the story card (replaces .report-item__body) */
+.story-item__body,
+.story-card__body { /* Added .story-card__body for consistency with new template */
+  padding: 0; /* Adjust if the .story-card padding is sufficient */
+  flex-grow: 1; /* Allow body to take available space */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px; /* Add some space below the body before the button */
 }
 
-.report-card h3 {
+/* Title inside the story card (replaces .report-item__title) */
+.story-item__title,
+.story-card__title { /* Added .story-card__title */
   font-size: 1.2rem;
-  margin: 0.5rem 0;
-  color: #2c3e50;
+  margin: 0;
+  color: var(--text-dark);
 }
 
-.report-card p {
-  font-size: 0.95rem;
+/* More info section (replaces .report-item__more-info) */
+.story-item__more-info,
+.story-card__meta { /* Added .story-card__meta for bookmark page */
+  font-size: 0.9rem;
   color: #555;
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-/* Button Link di dalam Card */
-.detail-button {
-  display: block;
-  margin-top: auto;
-  text-align: center;
-  padding: 0.8rem 1.5rem;
-  background-color:rgb(12, 205, 121);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
+.story-card__meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Description inside the story card (replaces .report-item__description) */
+.story-item__description,
+.story-card__description { /* Added .story-card__description */
+  font-size: 0.95rem;
+  color: #333;
+  flex-grow: 1; /* Allow description to grow and push button down */
+  margin-bottom: 0.5rem; /* Adjust if needed */
+}
+
+/* Read more button (replaces .report-item__read-more and .detail-button) */
+.story-item__read-more,
+.detail-button { /* Keeping .detail-button for compatibility, but recommend consolidating to .button-primary */
+  align-self: flex-start; /* Align button to start within flex column */
+  display: inline-flex; /* Use inline-flex for button content alignment */
+  align-items: center;
+  padding: 8px 16px; /* Slightly more padding for buttons */
+  font-size: 0.95rem; /* Slightly larger font */
+  background-color: var(--soft-blue);
+  color: var(--text-light);
+  border-radius: 8px; /* Consistent border-radius */
   text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease; /* Add transform transition */
+  margin-top: auto; /* Pushes the button to the bottom of the flex container */
 }
 
+.story-item__read-more:hover,
 .detail-button:hover {
-  background-color:rgb(53, 243, 47);
+  background-color: var(--light-blue);
+  transform: translateY(-2px); /* Slight lift on hover */
 }
 
 
+/* --- General Button Styles (Updated and consolidated) --- */
+.button-primary {
+    background-color: var(--soft-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button-primary:hover {
+    background-color: var(--light-blue);
+    transform: translateY(-2px);
+}
+
+.button-secondary {
+    background-color: transparent;
+    color: var(--medium-purple);
+    border: 2px solid var(--medium-purple);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button-secondary:hover {
+    background-color: var(--medium-purple);
+    color: var(--text-light);
+    transform: translateY(-2px);
+}
 
 
-/* Responsiveness */
+/* --- Responsiveness --- */
 @media screen and (width > 1000px) {
   .navigation-drawer {
     min-height: auto;
@@ -317,7 +398,7 @@ a.logout-button:hover {
   }
 
   .nav-list li a {
-    border-radius: ;
+    border-radius: 12px; /* Ensure border-radius is set */
   }
 
   .drawer-button {
@@ -325,27 +406,17 @@ a.logout-button:hover {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-/* New Report Form Section */
+/* --- New Report Form Section (keeping original names as they are specific to form) --- */
 .new-report__header {
   padding: 2rem 0;
-  background-color: #f9f9f9;
+  background-color: var(--bg-light);
   text-align: center;
   border-bottom: 2px solid #ccc;
 }
 
 .new-report__header__title {
   font-size: 2.5rem;
-  color: #2c3e50;
+  color: var(--text-dark);
 }
 
 .new-report__header__description {
@@ -357,11 +428,11 @@ a.logout-button:hover {
 
 /* Form Styles */
 .new-form__container {
-  background-color: white;
+  background-color: var(--text-light);
   padding: 2rem;
   margin-top: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .new-form__title__title,
@@ -370,6 +441,7 @@ a.logout-button:hover {
 .new-form__location__title {
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--text-dark); /* Ensure titles are dark */
 }
 
 .new-form__title__container,
@@ -394,23 +466,14 @@ a.logout-button:hover {
   min-height: 150px;
 }
 
+/* Form documentation buttons (using general button styles) */
 .new-form__documentations__buttons button,
 #camera-take-button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background-color: #0d6efd;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  /* Removed duplicate styling, relying on .button-primary now */
 }
 
 #camera-take-button:hover {
-  background-color: #0b5ed7;
+  /* Removed duplicate styling, relying on .button-primary:hover now */
 }
 
 .new-form__documentations__outputs li {
@@ -437,18 +500,19 @@ a.logout-button:hover {
   text-align: center;
 }
 
-/* Button Styles */
+/* Button Styles - General Form Buttons (consolidated with .button-primary/.button-secondary) */
 .form-buttons {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.form-buttons .btn {
+/* These will now use .button-primary and .button-secondary classes directly in HTML if possible */
+.form-buttons .btn { /* For backward compatibility if btn class is still used */
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
-  background-color: #0d6efd;
-  color: white;
+  background-color: var(--soft-blue);
+  color: var(--text-light);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -456,18 +520,18 @@ a.logout-button:hover {
 }
 
 .form-buttons .btn:hover {
-  background-color: #0b5ed7;
+  background-color: var(--light-blue);
 }
 
-.form-buttons .btn-outline {
+.form-buttons .btn-outline { /* For backward compatibility if btn-outline is still used */
   background-color: transparent;
-  color: #0d6efd;
-  border: 2px solid #0d6efd;
+  color: var(--soft-blue);
+  border: 2px solid var(--soft-blue);
 }
 
 .form-buttons .btn-outline:hover {
-  background-color: #0d6efd;
-  color: white;
+  background-color: var(--soft-blue);
+  color: var(--text-light);
 }
 
 /* Camera & Location Styling */
@@ -498,12 +562,47 @@ a.logout-button:hover {
 }
 
 /* Loading Spinner */
-.loading-spinner {
-  text-align: center;
-  font-size: 1.2rem;
+.loading-container { /* Renamed from .loading-spinner to be consistent with HTML output */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px; /* Give it some height so it's visible */
+  width: 100%;
   padding: 2rem;
   color: #555;
+  gap: 10px;
 }
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--soft-blue); /* Soft Blue for loader */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Loader absolute for bookmark page */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Ensure it's above content */
+    border-radius: 12px; /* Match card container */
+}
+
 
 /* Responsive Design */
 @media (max-width: 600px) {
@@ -522,44 +621,32 @@ a.logout-button:hover {
   }
 }
 
-#map{
-  height:300px
+#map {
+  height: 300px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-/* Login Page Styles */
+/* --- Login Page Styles --- */
 .login-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f4f4f4;
+  background-color: var(--bg-light); /* Use new background color */
   padding: 2rem;
 }
 
 .login-form-container {
-  background-color: white;
+  background-color: var(--text-light);
   padding: 2.5rem 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px var(--shadow-light);
   width: 100%;
   max-width: 400px;
 }
 
 .login__title {
   font-size: 2rem;
-  color: #2c3e50;
+  color: var(--text-dark);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -597,7 +684,7 @@ a.logout-button:hover {
 }
 
 .login-form__do-not-have-account a {
-  color: #0d6efd;
+  color: var(--medium-purple); /* Purple for links */
   text-decoration: none;
   font-weight: bold;
 }
@@ -606,7 +693,7 @@ a.logout-button:hover {
   text-decoration: underline;
 }
 
-/* Loader spinner (gunakan fontawesome jika ada) */
+/* Loader spinner (using general .loader style) */
 .loader-button {
   animation: spin 1s linear infinite;
   margin-right: 0.5rem;
@@ -632,26 +719,18 @@ a.logout-button:hover {
   }
 }
 
-
-
-
-
-
-
-
-
-/* Register Page Styles */
+/* --- Register Page Styles --- */
 .register-container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: #f5f5f5;
+  background: var(--bg-light); /* Use new background color */
 }
 
 .register-form-container {
-  background-color: #ffffff;
+  background-color: var(--text-light);
   padding: 2.5rem;
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -662,7 +741,7 @@ a.logout-button:hover {
 .register__title {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #2c3e50; /* Meningkatkan kontras untuk title */
+  color: var(--text-dark);
   text-align: center;
 }
 
@@ -689,7 +768,7 @@ a.logout-button:hover {
   border-radius: 10px;
   font-size: 1rem;
   transition: border-color 0.3s;
-  width: 100%; /* Menambahkan ini supaya input mengisi lebar kontainer */
+  width: 100%;
 }
 
 .register-form__form-buttons {
@@ -700,27 +779,26 @@ a.logout-button:hover {
   gap: 1rem;
 }
 
-#submit-button-container .btn {
-  background-color: #0d6efd;
-  color: white;
+#submit-button-container .btn { /* This will use .button-primary eventually */
+  background-color: var(--soft-pink); /* Soft Pink for submit buttons */
+  color: var(--text-light);
   padding: 0.75rem;
   font-size: 1rem;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 100%; /* Tombol lebar penuh */
+  width: 100%;
 }
 
 #submit-button-container .btn:hover {
-  background-color: #0b5ed7;
+  background-color: var(--medium-purple); /* Medium Purple on hover */
 }
 
 #submit-button-container .btn:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
 }
-
 
 .register-form__already-have-account {
   font-size: 0.95rem;
@@ -729,7 +807,7 @@ a.logout-button:hover {
 }
 
 .register-form__already-have-account a {
-  color: #0d6efd;
+  color: var(--medium-purple); /* Purple for links */
   text-decoration: none;
   font-weight: 600;
 }
@@ -739,16 +817,7 @@ a.logout-button:hover {
 }
 
 /* Spinner Icon */
-.loader-button {
-  animation: spin 1s linear infinite;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* .loader-button styling is already covered by .loader if used correctly */
 
 /* Responsive */
 @media (max-width: 500px) {
@@ -766,36 +835,31 @@ a.logout-button:hover {
 
   #submit-button-container .btn {
     font-size: 0.95rem;
-    padding: 1rem; /* Menambah padding tombol di layar kecil */
+    padding: 1rem;
   }
 }
 
-
-
-
-
-
-
+/* --- Story Detail Page Styles --- */
 .story-detail__container {
-  max-width: 1000px;      /* Ukuran kontainer teks, bisa disesuaikan */
-  margin: 0 auto;        /* Biar center */
+  max-width: 1000px;
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
   align-items: flex-start;
   padding: 2rem;
-  background-color: #f9f9f9;
+  background-color: var(--bg-light);
   border-radius: 12px;
 }
 
 .story-detail {
   flex: 1 1 300px;
   max-width: 1000px;
-  background-color: #ffffff;
+  background-color: var(--text-light);
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .story-detail img {
@@ -817,48 +881,27 @@ a.logout-button:hover {
   padding-bottom: 0.5rem;
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100px;
-  width: 100%;
-}
+/* Loading container for various sections */
+/* This is a general loading container, for use with .loader */
+/* Renamed from .loading-spinner to be consistent with HTML output and more flexible */
 
-.loader {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007BFF;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 
 /* Map styling */
 #map {
+  height: 300px;
   margin-top: 2rem;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-
-
+/* --- Accessibility Styles --- */
 .skip-to-content {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #000;
-  color: #fff;
+  background: var(--medium-purple); /* Purple for skip link */
+  color: var(--text-light);
   padding: 8px 16px;
   z-index: 9999999;
   text-decoration: none;
@@ -873,10 +916,7 @@ a.logout-button:hover {
   transform: translateY(0%);
 }
 
-
-
-
-
+/* --- Push Notification Tools --- */
 .push-notification-tools {
   margin: 0;
 }
@@ -885,8 +925,8 @@ a.logout-button:hover {
 #subscribe-button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #2ecc71;
-  color: #fff;
+  background-color: var(--soft-pink); /* Soft Pink for subscribe button */
+  color: var(--text-light);
   text-decoration: none;
   border-radius: 12px;
   font-size: 1rem;
@@ -895,88 +935,39 @@ a.logout-button:hover {
   text-align: center;
   transition: background-color 0.3s ease, transform 0.2s ease;
   border: none;
-
 }
 
 #subscribe-button:hover {
-  background-color: #27ae60;
+  background-color: var(--medium-purple); /* Medium Purple on hover */
   transform: scale(1.05);
 }
 
-
-
-
-
-
-
-
-
-.reports-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 20px;
+/* --- Empty/Error States (New sections) --- */
+.info-card, .error-card {
+    background-color: var(--text-light);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
-.report-item {
-  background-color: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.info-card p, .error-card p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.5;
 }
 
-.report-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+.info-card h2, .error-card h3 {
+    color: var(--medium-purple);
+    margin-bottom: 0.5rem;
 }
 
-.report-item__image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  background-color: #f0f0f0;
-}
-
-.report-item__body {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.report-item__title {
-  font-size: 1.2rem;
-  margin: 0;
-  color: #222;
-}
-
-.report-item__more-info {
-  font-size: 0.9rem;
-  color: #555;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.report-item__description {
-  font-size: 0.95rem;
-  color: #333;
-}
-
-.report-item__read-more {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  background-color: #0a84ff;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background-color 0.2s ease;
-}
-
-.report-item__read-more:hover {
-  background-color: #006fd6;
+.error-card h3 {
+    color: #e74c3c; /* Red for errors */
 }

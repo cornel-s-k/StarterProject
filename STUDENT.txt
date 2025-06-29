@@ -1,6 +1,2 @@
-<<<<<<< HEAD
 APP_URL= https://cornel-s-k.github.io/StarterProject/
-=======
-APP_URL=<url_aplikasi>
->>>>>>> 668ba7c5796b75f172d68a25a0c8b7daf5dbb4d9
 MAP_SERVICE_API_KEY=<api_key>
